@@ -18,7 +18,7 @@ conda activate jbshield
 Please follow [this](https://pytorch.org/get-started/locally/) to install Pytorch and `pip install` the following packages:
 
 ```shell
-python -m pip install transformers fschat pandas accelerate nltk sentencepiece scikit-learn
+python -m pip install transformers fschat pandas accelerate nltk sentencepiece scikit-learn protobuf
 ```
 
 ## Our Dataset
@@ -73,7 +73,7 @@ The results are saved in `./interpret_results`.
 
 ## JBSHield-D
 
-Run the following commands to evaluate the jailbreak detection performance of JBShield-D on the five LLMs:
+Run the following commands to evaluate the jailbreak detection performance of `JBShield-D` on the five LLMs:
 
 ```shell
 chmod +x ./evaluate_detection.sh
@@ -82,13 +82,13 @@ chmod +x ./evaluate_detection.sh
 
 The results are saved in `/logs/JBShield-D_{model_name}.log`. We have also provided the logs from our runs in the same directory.
 
-Performance (accuracy/F1-score) of JBShield-D across different LLMs:
+Performance (accuracy/F1-score) of `JBShield-D` across different LLMs:
 
 ![detection](./figs/detection.png)
 
 ## JBSHield-M
 
-Run the following commands to evaluate the jailbreak mitigation performance of JBShield-M on the five LLMs:
+Run the following commands to evaluate the jailbreak mitigation performance of `JBShield-M` on the five LLMs:
 
 ```shell
 chmod +x ./evaluate_mitigation.sh
@@ -97,6 +97,6 @@ chmod +x ./evaluate_mitigation.sh
 
 The results are saved in `/logs/JBShield-M.log`. We have also provided the logs from our runs in the same directory.
 
-Performance (attack success rate) of JBShield-M across different LLMs:
+Performance (attack success rate) of `JBShield-M` across different LLMs:
 
 ![mitigation](./figs/mitigation.png)

@@ -296,7 +296,8 @@ def get_sentence_embeddings(prompts, model, model_name, tokenizer):
 from nltk.corpus import words
 import nltk
 
-# nltk.download('words')
+# Download when running for the first time
+nltk.download('words')
 word_list = set(words.words())
 
 
