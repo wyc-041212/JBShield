@@ -379,7 +379,7 @@ def get_svd(difference_matrix):
 
 
 def interpret_difference_matrix(
-    model, tokenizer, embeddings1, embeddings2, top_k=10, return_tokens=False
+    model, tokenizer, embeddings1, embeddings2, top_k=10, return_tokens=True
 ):
     """
     Interpret the difference matrix between two sets of embeddings
