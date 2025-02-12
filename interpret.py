@@ -195,7 +195,7 @@ if __name__ == "__main__":
     # Show the tokens that are most assiciated with the toxic and jailbreak concepts
     # The results are saved in ./interpre_results
     interpret(model_name)
-    print("Interpretation done.")
+    print("{} Interpretation done.".format(model_name))
 
 # An example for run this script on llama-2
 # python interpret.py --model llama-2

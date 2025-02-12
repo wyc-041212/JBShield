@@ -1,10 +1,12 @@
 # JBShield: Defending Large Language Models from Jailbreak Attacks through Activated Concept Analysis and Manipulation
 
-This repository includes the data and python implementation of `JBShield`.
+This repository includes the data and python implementation for the paper "JBShield: Defending Large Language Models from Jailbreak Attacks through Activated Concept Analysis and Manipulation." (Accepted by the 34rd USENIX Security Symposium 2025).
+
+[![arXiv](https://img.shields.io/badge/arXiv-paper-b31b1b.svg)](https://arxiv.org/abs/2502.07557)
 
 ![pipeline](./figs/pipeline.png)
 
-Note: The experimental results presented in this artifact may exhibit some variations due to differences in testing environments, the randomness in calibration set selection, and dataset size discrepancies across different jailbreak methods (DrAttack and Puzzler contain fewer samples compared to others). Despite these variations, the overall trends and effectiveness of JBShield remain stable, as demonstrated by the extensive evaluations conducted in our study.
+Note: The experimental results presented in this artifact may exhibit some variations due to differences in testing environments, the randomness in calibration set selection, and dataset size discrepancies across different jailbreak methods (DrAttack and Puzzler contain fewer samples compared to others). Despite these variations, the overall trends and effectiveness of `JBShield` remain stable, as demonstrated by the extensive evaluations conducted in our study.
 
 ## Requirements
 
@@ -100,3 +102,18 @@ The results are saved in `/logs/JBShield-M.log`. We have also provided the logs 
 Performance (attack success rate) of `JBShield-M` across different LLMs:
 
 ![mitigation](./figs/mitigation.png)
+
+## Citation
+
+If you find this helpful, please cite our work:
+
+```tex
+@misc{zhang2025jbshield,
+      title={JBShield: Defending Large Language Models from Jailbreak Attacks through Activated Concept Analysis and Manipulation}, 
+      author={Shenyi Zhang and Yuchen Zhai and Keyan Guo and Hongxin Hu and Shengnan Guo and Zheng Fang and Lingchen Zhao and Chao Shen and Cong Wang and Qian Wang},
+      year={2025},
+      eprint={2502.07557},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR}
+}
+```
