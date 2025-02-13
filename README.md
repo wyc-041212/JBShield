@@ -2,13 +2,15 @@
 
 This repository includes the data and python implementation for the paper "JBShield: Defending Large Language Models from Jailbreak Attacks through Activated Concept Analysis and Manipulation." (Accepted by the 34rd USENIX Security Symposium 2025).
 
-[![arXiv](https://img.shields.io/badge/arXiv-paper-b31b1b.svg)](https://arxiv.org/abs/2502.07557)
+[![arXiv](https://img.shields.io/badge/arXiv-paper-b31b1b.svg)](https://arxiv.org/abs/2502.07557) [![license](https://img.shields.io/github/license/NISPlab/JBSHield)](https://opensource.org/licenses/MIT)
 
 ![pipeline](./figs/pipeline.png)
 
 Note: The experimental results presented in this artifact may exhibit some variations due to differences in testing environments, the randomness in calibration set selection, and dataset size discrepancies across different jailbreak methods (DrAttack and Puzzler contain fewer samples compared to others). Despite these variations, the overall trends and effectiveness of `JBShield` remain stable, as demonstrated by the extensive evaluations conducted in our study.
 
 ## Requirements
+
+The minimum hardware requirement is two GPUs with at least 24GB VRAM each (e.g., RTX 3090 or RTX 4090). For optimal performance, we recommend a setup with 4 RTX 4090 GPUs (24GB VRAM each) or 1 A100 GPUs (80GB VRAM each). 
 
 The code for `JBShield` runs with Python 3 and requires Pytorch. We recommend using `Anaconda` or `miniconda` for python. Our code has been tested with `python=3.12.8` and `torch=2.5.1` on linux. First, create a conda environment activate it:
 
@@ -84,7 +86,7 @@ chmod +x ./evaluate_detection.sh
 
 The results are saved in `/logs/JBShield-D_{model_name}.log`. We have also provided the logs from our runs in the same directory.
 
-Performance (accuracy/F1-score) of `JBShield-D` across different LLMs:
+Performance (accuracy/F1-score) of `JBShield-D` across different LLMs (Table 4 in our paper):
 
 ![detection](./figs/detection.png)
 
@@ -99,7 +101,7 @@ chmod +x ./evaluate_mitigation.sh
 
 The results are saved in `/logs/JBShield-M.log`. We have also provided the logs from our runs in the same directory.
 
-Performance (attack success rate) of `JBShield-M` across different LLMs:
+Performance (attack success rate) of `JBShield-M` across different LLMs (Table 7 in our paper):
 
 ![mitigation](./figs/mitigation.png)
 
