@@ -73,7 +73,7 @@ chmod +x ./interpret.sh
 ./interpret.sh
 ```
 
-The results are saved in `./interpret_results`.
+The results are saved in `./interpret_results` (see Table 2 and Appendix A in our paper).
 
 ## JBSHield-D
 
@@ -86,7 +86,7 @@ chmod +x ./evaluate_detection.sh
 
 The results are saved in `/logs/JBShield-D_{model_name}.log`. We have also provided the logs from our runs in the same directory.
 
-Performance (accuracy/F1-score) of `JBShield-D` across different LLMs (Table 4 in our paper):
+Performance (accuracy/F1-score) of `JBShield-D` across different LLMs (see Table 4 in our paper):
 
 ![detection](./figs/detection.png)
 
@@ -101,7 +101,7 @@ chmod +x ./evaluate_mitigation.sh
 
 The results are saved in `/logs/JBShield-M.log`. We have also provided the logs from our runs in the same directory.
 
-Performance (attack success rate) of `JBShield-M` across different LLMs (Table 7 in our paper):
+Performance (attack success rate) of `JBShield-M` across different LLMs (see Table 7 in our paper):
 
 ![mitigation](./figs/mitigation.png)
 
