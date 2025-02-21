@@ -34,18 +34,25 @@ class JBShieldM:
         self.base_jailbreak_vector = base_jailbreak_vector
         self.threshold_safety = threshold_safety
         self.threshold_jailbreak = threshold_jailbreak
+        """
+        These deltas (scaling factor in our paper) need to be carefully tuned to ensure that the model outputs 
+        readable text.
+        For example, the latest vectors are effective in defending against GCG. 
+        For base64, zulu, etc., we recommend slightly reducing the delta.
+        """
         self.delta_safety = delta_safety
         self.delta_jailbreak = delta_jailbreak
         self.selected_safety_layer_index = selected_safety_layer_index
         self.selected_jailbreak_layer_index = selected_jailbreak_layer_index
         self.hooks = []
+        # self.count = 10
 
     def detection(self, embeddings1, base_embedding, base_vector, threshold):
-        '''
+        """
         For real applications, concept manipulation should be applied only when jailbreak prompts are detected
         which means this function should be called only when toxic and jailbreak concepts are both detected.
         Here we use a simpler version as all test data are jailbreak prompts.
-        '''
+        """
         results = []
         for embed in embeddings1:
             vec, _ = interpret_difference_matrix(
@@ -72,6 +79,8 @@ class JBShieldM:
             self.base_safety_vector,
             self.threshold_safety,
         )
+        # # Manipulating only the first few tokens can improve readability
+        # if toxic_concept_detection and self.count >= 0:
         if toxic_concept_detection:
             tmp = tmp + self.delta_safety * self.base_safety_vector.to(
                 torch.float16
@@ -90,6 +99,8 @@ class JBShieldM:
             self.base_jailbreak_vector,
             self.threshold_jailbreak,
         )
+        # # Manipulating only the first few tokens can improve readability
+        # if jailbreak_concept_detection and self.count >= 0:
         if jailbreak_concept_detection:
             tmp = tmp + self.delta_jailbreak * self.base_jailbreak_vector.to(
                 torch.float16
@@ -112,10 +123,10 @@ class JBShieldM:
             hook.remove()
 
 
-def prepare_mitigation_data(model, model_name):
-    '''
+def prepare_mitigation_data(model_name):
+    """
     Prepare model response for mitigation evaluation
-    '''
+    """
     # Load model
     model, tokenizer = load_model(model_name, model_paths)
 
@@ -134,7 +145,7 @@ def prepare_mitigation_data(model, model_name):
     jailbreak_prompts = {}
     goals = {}
     for jailbreak in jailbreaks:
-        path = f"data/mitigation/{jailbreak}/{model_name}_test.json"
+        path = f"data/mitigation/{jailbreak}/{model_name}.json"
         with open(path) as f:
             data = json.load(f)
         jailbreak_prompts[jailbreak] = [item["jailbreak"] for item in data]
@@ -295,7 +306,9 @@ def evaluate_mitigation():
 
 
 if __name__ == "__main__":
-    # Get parameters
+    # Run this script to evaluate the mitigation performance of JBShield-M on 5 llms
+    # In our latest results, sorry-bench seems not to work properly when evaluating defenses against DrAttack 
+    # on Mistral
     evaluate_mitigation()
 
 # An example for run this script to evaluate the mitigation on 5 llms

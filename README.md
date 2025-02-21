@@ -8,6 +8,8 @@ This repository includes the data and python implementation for the paper "JBShi
 
 Note: The experimental results presented in this artifact may exhibit some variations due to differences in testing environments, the randomness in calibration set selection, and dataset size discrepancies across different jailbreak methods (DrAttack and Puzzler contain fewer samples compared to others). Despite these variations, the overall trends and effectiveness of `JBShield` remain stable, as demonstrated by the extensive evaluations conducted in our study.
 
+Please feel free to contact us at [email](mailto:shenyizhang@whu.edu.cn) if you have any questions about this repo.
+
 ## Requirements
 
 The minimum hardware requirement is two GPUs with at least 24GB VRAM each (e.g., RTX 3090 or RTX 4090). For optimal performance, we recommend a setup with 4 RTX 4090 GPUs (24GB VRAM each) or 1 A100 GPUs (80GB VRAM each). 

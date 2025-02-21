@@ -4,7 +4,7 @@ import numpy as np
 from tqdm import tqdm
 from sklearn.metrics import roc_curve
 
-from config import path_harmful, path_non_harmless, model_paths
+from config import model_paths
 from config import path_harmful_test, path_non_harmless_test, path_harmful_calibration, path_non_harmless_calibration
 from utils import load_model, load_ori_prompts, get_jailbreak_prompts
 from utils import get_sentence_embeddings
@@ -96,7 +96,6 @@ def find_optimal_threshold(model, tokenizer, calibration_embeddings1, calibratio
     Args:
     - model: model to get embeddings from
     - tokenizer: tokenizer to use for encoding prompts
-    - mean_harmless_embedding: mean embedding for harmless prompts
     - calibration_embeddings1: first set of embeddings
     - calibration_embeddings2: second set of embeddings
     - calibration_embedding: base embedding to compare against
@@ -158,31 +157,38 @@ def detection(model_name):
     model, tokenizer = load_model(model_name, model_paths)
 
     # Load data
-    harmful_prompts, harmless_prompts = load_ori_prompts(path_harmful, path_non_harmless)
-    harmful_prompts_test, harmless_prompts_test = load_ori_prompts(path_harmful_test, path_non_harmless_test)
+    # harmful_prompts, harmless_prompts = load_ori_prompts(path_harmful, path_non_harmless)
+    _, harmless_prompts_test = load_ori_prompts(path_harmful_test, path_non_harmless_test)
     harmful_prompts_calibration, harmless_prompts_calibration = load_ori_prompts(path_harmful_calibration, path_non_harmless_calibration)
     jailbreaks = ["ijp", "gcg", "saa", "autodan", "pair", "drattack", "puzzler", "zulu", "base64"]
     jailbreak_prompts_calibration = get_jailbreak_prompts(model_name, jailbreaks, split="calibration")
     jailbreak_prompts_test = get_jailbreak_prompts(model_name, jailbreaks, split="test")
 
-    # Get embdddings for prompts
-    print("Get embeddings for harmful and harmless prompts...")
-    harmful_embeddings = get_sentence_embeddings(harmful_prompts, model, model_name, tokenizer)
-    harmless_embeddings = get_sentence_embeddings(harmless_prompts, model, model_name, tokenizer)
-    # Mean embeddings for harmful and harmless prompts
-    mean_harmful_embedding = []
-    mean_harmless_embedding = []
-    for i in range(len(harmful_embeddings)):
-        mean_harmful_embedding.append(torch.mean(torch.stack(harmful_embeddings[i]), dim=0))
-        mean_harmless_embedding.append(torch.mean(torch.stack(harmless_embeddings[i]), dim=0))
-    ## Save mean embeddings for harmful and harmless prompts when the first time to run this script
-    # torch.save(mean_harmful_embedding, './vectors/{}/mean_harmful_embedding.pt'.format(model_name))
-    # torch.save(mean_harmless_embedding, './vectors/{}/mean_harmless_embedding.pt'.format(model_name))
+    # Remove for potential data leakage
+    # # Get embdddings for prompts
+    # print("Get embeddings for harmful and harmless prompts...")
+    # harmful_embeddings = get_sentence_embeddings(harmful_prompts, model, model_name, tokenizer)
+    # harmless_embeddings = get_sentence_embeddings(harmless_prompts, model, model_name, tokenizer)
+    # # Mean embeddings for harmful and harmless prompts
+    # mean_harmful_embedding = []
+    # mean_harmless_embedding = []
+    # for i in range(len(harmful_embeddings)):
+    #     mean_harmful_embedding.append(torch.mean(torch.stack(harmful_embeddings[i]), dim=0))
+    #     mean_harmless_embedding.append(torch.mean(torch.stack(harmless_embeddings[i]), dim=0))
 
     # Embeddings for calibration prompts
     print("Get embeddings for calibration prompts...")
     calibration_harmless_embeddings = get_sentence_embeddings(harmless_prompts_calibration, model, model_name, tokenizer)
     calibration_harmful_embeddings = get_sentence_embeddings(harmful_prompts_calibration, model, model_name, tokenizer)
+    # Mean embeddings for harmful and harmless prompts
+    mean_harmful_embedding = []
+    mean_harmless_embedding = []
+    for i in range(len(calibration_harmless_embeddings)):
+        mean_harmful_embedding.append(torch.mean(torch.stack(calibration_harmful_embeddings[i]), dim=0))
+        mean_harmless_embedding.append(torch.mean(torch.stack(calibration_harmless_embeddings[i]), dim=0))
+    # # Save mean embeddings for harmful and harmless prompts when the first time to run this script
+    # torch.save(mean_harmful_embedding, './vectors/{}/mean_harmful_embedding.pt'.format(model_name))
+    # torch.save(mean_harmless_embedding, './vectors/{}/mean_harmless_embedding.pt'.format(model_name))
 
     calibration_gcg_embeddings = get_sentence_embeddings(jailbreak_prompts_calibration['gcg'], model, model_name, tokenizer)
     calibration_puzzler_embeddings = get_sentence_embeddings(jailbreak_prompts_calibration['puzzler'], model, model_name, tokenizer)
@@ -197,7 +203,7 @@ def detection(model_name):
     # Embeddings for test prompts
     print("Get embeddings for test prompts...")
     test_harmless_embeddings = get_sentence_embeddings(harmless_prompts_test, model, model_name, tokenizer)
-    test_harmful_embeddings = get_sentence_embeddings(harmful_prompts_test, model, model_name, tokenizer)
+    # test_harmful_embeddings = get_sentence_embeddings(harmful_prompts_test, model, model_name, tokenizer)
 
     test_gcg_embeddings = get_sentence_embeddings(jailbreak_prompts_test['gcg'], model, model_name, tokenizer)
     test_puzzler_embeddings = get_sentence_embeddings(jailbreak_prompts_test['puzzler'], model, model_name, tokenizer)
@@ -509,6 +515,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     model_name = args.model
 
+    # Run this script to evaluate the detection performance of JBShield-D
     detection(model_name)
 
 # An example for run this script to evaluate JBShield-D on the Mistral model

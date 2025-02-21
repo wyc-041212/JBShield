@@ -1,4 +1,3 @@
-Get embeddings for harmful and harmless prompts...
 Get embeddings for calibration prompts...
 Get embeddings for test prompts...
 Selected layer index for toxic concept detection: 27
@@ -7,7 +6,7 @@ Selected layer index for puzzler jailbreak concept detection: 27
 Selected layer index for saa jailbreak concept detection: 24
 Selected layer index for autodan jailbreak concept detection: 10
 Selected layer index for drattack jailbreak concept detection: 27
-Selected layer index for pair jailbreak concept detection: 27
+Selected layer index for pair jailbreak concept detection: 28
 Selected layer index for ijp jailbreak concept detection: 27
 Selected layer index for base64 jailbreak concept detection: 27
 Selected layer index for zulu jailbreak concept detection: 26
@@ -16,18 +15,18 @@ Evaluate the jailbreak detection...
 Calibration data from :  ijp - Test data from :  ijp
 Accuracy: 0.8536585365853658  | F1 score: 0.871931696905016
 Calibration data from :  gcg - Test data from :  gcg
-Accuracy: 0.9890243902439024  | F1 score: 0.989051094890511
+Accuracy: 0.9859756097560975  | F1 score: 0.9860521528198908
 Calibration data from :  saa - Test data from :  saa
-Accuracy: 0.9384146341463414  | F1 score: 0.941987363584147
+Accuracy: 0.9396341463414634  | F1 score: 0.9430707303047728
 Calibration data from :  autodan - Test data from :  autodan
-Accuracy: 0.974390243902439  | F1 score: 0.974910394265233
+Accuracy: 0.9676829268292683  | F1 score: 0.9685459940652819
 Calibration data from :  pair - Test data from :  pair
-Accuracy: 0.8817073170731707  | F1 score: 0.8919821826280623
+Accuracy: 0.8859756097560976  | F1 score: 0.896283971159179
 Calibration data from :  drattack - Test data from :  drattack
-Accuracy: 0.8198473282442749  | F1 score: 0.805921052631579
+Accuracy: 0.8206106870229007  | F1 score: 0.8065843621399177
 Calibration data from :  puzzler - Test data from :  puzzler
-Accuracy: 0.8154761904761905  | F1 score: 0.20512820512820512
+Accuracy: 0.825  | F1 score: 0.21390374331550802
 Calibration data from :  zulu - Test data from :  zulu
-Accuracy: 0.9134146341463415  | F1 score: 0.9201349831271092
+Accuracy: 0.9115853658536586  | F1 score: 0.9185850645704661
 Calibration data from :  base64 - Test data from :  base64
-Accuracy: 0.9054878048780488  | F1 score: 0.9136490250696379
+Accuracy: 0.9060975609756098  | F1 score: 0.9141583054626534
