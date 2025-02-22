@@ -9,6 +9,13 @@ from utils import load_model, get_judge_scores, get_output_prompt
 from utils import interpret_difference_matrix, cosine_similarity
 
 
+"""
+For real applications, concept manipulation should be applied only when 
+jailbreak prompts are detected which means this function should be called 
+only when toxic and jailbreak concepts are both detected.
+
+Here we use a simple version as all test data are jailbreak prompts.
+"""
 # Model with concept manipulation
 class JBShieldM:
     def __init__(
@@ -35,17 +42,15 @@ class JBShieldM:
         self.threshold_safety = threshold_safety
         self.threshold_jailbreak = threshold_jailbreak
         """
-        These deltas (scaling factor in our paper) need to be carefully tuned to ensure that the model outputs 
-        readable text.
-        For example, the latest vectors are effective in defending against GCG. 
-        For base64, zulu, etc., we recommend slightly reducing the delta.
+        These deltas (scaling factor in our paper) can to be carefully tuned to ensure 
+        that the model outputs readable text.
         """
         self.delta_safety = delta_safety
         self.delta_jailbreak = delta_jailbreak
         self.selected_safety_layer_index = selected_safety_layer_index
         self.selected_jailbreak_layer_index = selected_jailbreak_layer_index
         self.hooks = []
-        # self.count = 10
+        # self.count = 20
 
     def detection(self, embeddings1, base_embedding, base_vector, threshold):
         """
@@ -110,11 +115,11 @@ class JBShieldM:
 
     def register_hooks(self):
         hook_safety = self.model.model.layers[
-            self.selected_safety_layer_index - 1
+            self.selected_safety_layer_index
         ].register_forward_hook(self.hook_fn_safety)
         self.hooks.append(hook_safety)
         hook_jailbreak = self.model.model.layers[
-            self.selected_jailbreak_layer_index - 1
+            self.selected_jailbreak_layer_index
         ].register_forward_hook(self.hook_fn_jailbreak)
         self.hooks.append(hook_jailbreak)
 
@@ -254,6 +259,8 @@ def prepare_mitigation_data(model_name):
                 ],
                 f,
             )
+        
+        jbshield_m.remove_hooks()
 
 
 def evaluate_mitigation():
@@ -306,9 +313,11 @@ def evaluate_mitigation():
 
 
 if __name__ == "__main__":
+    # # Prepare responses for test
+    # for model_name in ["llama-2", "mistral", "llama-3", "vicuna-7b", "vicuna-13b"]:
+    #     prepare_mitigation_data(model_name)
+    
     # Run this script to evaluate the mitigation performance of JBShield-M on 5 llms
-    # In our latest results, sorry-bench seems not to work properly when evaluating defenses against DrAttack 
-    # on Mistral
     evaluate_mitigation()
 
 # An example for run this script to evaluate the mitigation on 5 llms
