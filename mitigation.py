@@ -115,11 +115,11 @@ class JBShieldM:
 
     def register_hooks(self):
         hook_safety = self.model.model.layers[
-            self.selected_safety_layer_index
+            self.selected_safety_layer_index - 1
         ].register_forward_hook(self.hook_fn_safety)
         self.hooks.append(hook_safety)
         hook_jailbreak = self.model.model.layers[
-            self.selected_jailbreak_layer_index
+            self.selected_jailbreak_layer_index - 1
         ].register_forward_hook(self.hook_fn_jailbreak)
         self.hooks.append(hook_jailbreak)
 
@@ -314,7 +314,7 @@ def evaluate_mitigation():
 
 if __name__ == "__main__":
     # # Prepare responses for test
-    # for model_name in ["llama-2", "mistral", "llama-3", "vicuna-7b", "vicuna-13b"]:
+    # for model_name in ["mistral", "llama-2", "llama-3", "vicuna-7b", "vicuna-13b"]:
     #     prepare_mitigation_data(model_name)
     
     # Run this script to evaluate the mitigation performance of JBShield-M on 5 llms
