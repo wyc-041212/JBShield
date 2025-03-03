@@ -77,7 +77,7 @@ chmod +x ./interpret.sh
 
 The results are saved in `./interpret_results` (see Table 2 and Appendix A in our paper).
 
-## JBSHield-D
+## JBShield-D
 
 Run the following commands to evaluate the jailbreak detection performance of `JBShield-D` on the five LLMs:
 
