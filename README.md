@@ -92,7 +92,7 @@ Performance (accuracy/F1-score) of `JBShield-D` across different LLMs (see Table
 
 ![detection](./figs/detection.png)
 
-## JBSHield-M
+## JBShield-M
 
 Run the following commands to evaluate the jailbreak mitigation performance of `JBShield-M` on the five LLMs:
 
