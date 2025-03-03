@@ -152,7 +152,7 @@ def detection_judge(model, tokenizer, embeddings1, calibration_embedding, calibr
     return results
 
 
-def detection(model_name):
+def detection(model_name, update_vectors=False):
     # Load model
     model, tokenizer = load_model(model_name, model_paths)
 
@@ -186,9 +186,10 @@ def detection(model_name):
     for i in range(len(calibration_harmless_embeddings)):
         mean_harmful_embedding.append(torch.mean(torch.stack(calibration_harmful_embeddings[i]), dim=0))
         mean_harmless_embedding.append(torch.mean(torch.stack(calibration_harmless_embeddings[i]), dim=0))
-    # # Save mean embeddings for harmful and harmless prompts when the first time to run this script
-    # torch.save(mean_harmful_embedding, './vectors/{}/mean_harmful_embedding.pt'.format(model_name))
-    # torch.save(mean_harmless_embedding, './vectors/{}/mean_harmless_embedding.pt'.format(model_name))
+    if update_vectors:
+        # Save mean embeddings for harmful and harmless prompts when the first time to run this script
+        torch.save(mean_harmful_embedding, './vectors/{}/mean_harmful_embedding.pt'.format(model_name))
+        torch.save(mean_harmless_embedding, './vectors/{}/mean_harmless_embedding.pt'.format(model_name))
 
     calibration_gcg_embeddings = get_sentence_embeddings(jailbreak_prompts_calibration['gcg'], model, model_name, tokenizer)
     calibration_puzzler_embeddings = get_sentence_embeddings(jailbreak_prompts_calibration['puzzler'], model, model_name, tokenizer)
@@ -405,10 +406,11 @@ def detection(model_name):
             mean_harmful_embedding[seleced_jailbreak_layer_indexs[idx_calibration]],
             calibration_jailbreak_vectors[idx_calibration],
         )
-        # # Save thersholds for mitigation when the first time to run this script
-        # if idx_calibration == idx_test:
-        #     torch.save(thershold_safety, './vectors/{}/thershold_safety_{}.pt'.format(model_name, jailbreaks[idx_calibration]))
-        #     torch.save(thershold_jailbreak, './vectors/{}/thershold_jailbreak_{}.pt'.format(model_name, jailbreaks[idx_calibration]))
+        if update_vectors:
+            # Save thersholds for mitigation when the first time to run this script
+            if idx_calibration == idx_test:
+                torch.save(thershold_safety, './vectors/{}/thershold_safety_{}.pt'.format(model_name, jailbreaks[idx_calibration]))
+                torch.save(thershold_jailbreak, './vectors/{}/thershold_jailbreak_{}.pt'.format(model_name, jailbreaks[idx_calibration]))
         # Detect the jailbreak prompts
         results_safety = detection_judge(
             model,
@@ -468,42 +470,43 @@ def detection(model_name):
             f1 = 0
         print("Accuracy: {}".format(accuracy), " | F1 score: {}".format(f1))
 
-    # # Save vectors for mitigation when the first time to run this script
-    # layer_indexs = [seleced_safety_layer_index, seleced_jailbreak_layer_index_gcg, seleced_jailbreak_layer_index_puzzler, seleced_jailbreak_layer_index_saa, seleced_jailbreak_layer_index_autodan, seleced_jailbreak_layer_index_drattack, seleced_jailbreak_layer_index_pair, seleced_jailbreak_layer_index_ijp, seleced_jailbreak_layer_index_base64, seleced_jailbreak_layer_index_zulu]
-    # torch.save(layer_indexs, './vectors/{}/layer_indexs.pt'.format(model_name))    
-
-    # torch.save(delta_jailbreak_gcg, './vectors/{}/delta_jailbreak_gcg.pt'.format(model_name))
-    # torch.save(delta_jailbreak_puzzler, './vectors/{}/delta_jailbreak_puzzler.pt'.format(model_name))
-    # torch.save(delta_jailbreak_saa, './vectors/{}/delta_jailbreak_saa.pt'.format(model_name))
-    # torch.save(delta_jailbreak_autodan, './vectors/{}/delta_jailbreak_autodan.pt'.format(model_name))
-    # torch.save(delta_jailbreak_drattack, './vectors/{}/delta_jailbreak_drattack.pt'.format(model_name))
-    # torch.save(delta_jailbreak_pair, './vectors/{}/delta_jailbreak_pair.pt'.format(model_name))
-    # torch.save(delta_jailbreak_ijp, './vectors/{}/delta_jailbreak_ijp.pt'.format(model_name))
-    # torch.save(delta_jailbreak_base64, './vectors/{}/delta_jailbreak_base64.pt'.format(model_name))
-    # torch.save(delta_jailbreak_zulu, './vectors/{}/delta_jailbreak_zulu.pt'.format(model_name))
-    # torch.save(delta_safety, './vectors/{}/delta_safety.pt'.format(model_name))
-
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_gcg], './vectors/{}/calibration_harmful_embedding_gcg.pt'.format(model_name))
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_puzzler], './vectors/{}/calibration_harmful_embedding_puzzler.pt'.format(model_name))
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_saa], './vectors/{}/calibration_harmful_embedding_saa.pt'.format(model_name))
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_autodan], './vectors/{}/calibration_harmful_embedding_autodan.pt'.format(model_name))
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_drattack], './vectors/{}/calibration_harmful_embedding_drattack.pt'.format(model_name))
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_pair], './vectors/{}/calibration_harmful_embedding_pair.pt'.format(model_name))
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_ijp], './vectors/{}/calibration_harmful_embedding_ijp.pt'.format(model_name))
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_base64], './vectors/{}/calibration_harmful_embedding_base64.pt'.format(model_name))
-    # torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_zulu], './vectors/{}/calibration_harmful_embedding_zulu.pt'.format(model_name))
-    # torch.save(calibration_harmless_embeddings[seleced_safety_layer_index], './vectors/{}/calibration_harmless_embedding.pt'.format(model_name))
-
-    # torch.save(calibration_safety_vector, './vectors/{}/calibration_safety_vector.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_gcg, './vectors/{}/calibration_jailbreak_vector_gcg.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_puzzler, './vectors/{}/calibration_jailbreak_vector_puzzler.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_saa, './vectors/{}/calibration_jailbreak_vector_saa.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_autodan, './vectors/{}/calibration_jailbreak_vector_autodan.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_drattack, './vectors/{}/calibration_jailbreak_vector_drattack.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_pair, './vectors/{}/calibration_jailbreak_vector_pair.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_ijp, './vectors/{}/calibration_jailbreak_vector_ijp.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_base64, './vectors/{}/calibration_jailbreak_vector_base64.pt'.format(model_name))
-    # torch.save(calibration_jailbreak_vector_zulu, './vectors/{}/calibration_jailbreak_vector_zulu.pt'.format(model_name))
+        if update_vectors:
+            # Save vectors for mitigation when the first time to run this script
+            layer_indexs = [seleced_safety_layer_index, seleced_jailbreak_layer_index_gcg, seleced_jailbreak_layer_index_puzzler, seleced_jailbreak_layer_index_saa, seleced_jailbreak_layer_index_autodan, seleced_jailbreak_layer_index_drattack, seleced_jailbreak_layer_index_pair, seleced_jailbreak_layer_index_ijp, seleced_jailbreak_layer_index_base64, seleced_jailbreak_layer_index_zulu]
+            torch.save(layer_indexs, './vectors/{}/layer_indexs.pt'.format(model_name))    
+        
+            torch.save(delta_jailbreak_gcg, './vectors/{}/delta_jailbreak_gcg.pt'.format(model_name))
+            torch.save(delta_jailbreak_puzzler, './vectors/{}/delta_jailbreak_puzzler.pt'.format(model_name))
+            torch.save(delta_jailbreak_saa, './vectors/{}/delta_jailbreak_saa.pt'.format(model_name))
+            torch.save(delta_jailbreak_autodan, './vectors/{}/delta_jailbreak_autodan.pt'.format(model_name))
+            torch.save(delta_jailbreak_drattack, './vectors/{}/delta_jailbreak_drattack.pt'.format(model_name))
+            torch.save(delta_jailbreak_pair, './vectors/{}/delta_jailbreak_pair.pt'.format(model_name))
+            torch.save(delta_jailbreak_ijp, './vectors/{}/delta_jailbreak_ijp.pt'.format(model_name))
+            torch.save(delta_jailbreak_base64, './vectors/{}/delta_jailbreak_base64.pt'.format(model_name))
+            torch.save(delta_jailbreak_zulu, './vectors/{}/delta_jailbreak_zulu.pt'.format(model_name))
+            torch.save(delta_safety, './vectors/{}/delta_safety.pt'.format(model_name))
+        
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_gcg], './vectors/{}/calibration_harmful_embedding_gcg.pt'.format(model_name))
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_puzzler], './vectors/{}/calibration_harmful_embedding_puzzler.pt'.format(model_name))
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_saa], './vectors/{}/calibration_harmful_embedding_saa.pt'.format(model_name))
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_autodan], './vectors/{}/calibration_harmful_embedding_autodan.pt'.format(model_name))
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_drattack], './vectors/{}/calibration_harmful_embedding_drattack.pt'.format(model_name))
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_pair], './vectors/{}/calibration_harmful_embedding_pair.pt'.format(model_name))
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_ijp], './vectors/{}/calibration_harmful_embedding_ijp.pt'.format(model_name))
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_base64], './vectors/{}/calibration_harmful_embedding_base64.pt'.format(model_name))
+            torch.save(calibration_harmful_embeddings[seleced_jailbreak_layer_index_zulu], './vectors/{}/calibration_harmful_embedding_zulu.pt'.format(model_name))
+            torch.save(calibration_harmless_embeddings[seleced_safety_layer_index], './vectors/{}/calibration_harmless_embedding.pt'.format(model_name))
+        
+            torch.save(calibration_safety_vector, './vectors/{}/calibration_safety_vector.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_gcg, './vectors/{}/calibration_jailbreak_vector_gcg.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_puzzler, './vectors/{}/calibration_jailbreak_vector_puzzler.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_saa, './vectors/{}/calibration_jailbreak_vector_saa.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_autodan, './vectors/{}/calibration_jailbreak_vector_autodan.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_drattack, './vectors/{}/calibration_jailbreak_vector_drattack.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_pair, './vectors/{}/calibration_jailbreak_vector_pair.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_ijp, './vectors/{}/calibration_jailbreak_vector_ijp.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_base64, './vectors/{}/calibration_jailbreak_vector_base64.pt'.format(model_name))
+            torch.save(calibration_jailbreak_vector_zulu, './vectors/{}/calibration_jailbreak_vector_zulu.pt'.format(model_name))
 
 
 
