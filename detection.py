@@ -5,7 +5,7 @@ from tqdm import tqdm
 from sklearn.metrics import roc_curve
 
 from config import model_paths
-from config import path_harmful_test, path_non_harmless_test, path_harmful_calibration, path_non_harmless_calibration
+from config import path_harmful_test, path_harmless_test, path_harmful_calibration, path_harmless_calibration
 from utils import load_model, load_ori_prompts, get_jailbreak_prompts
 from utils import get_sentence_embeddings
 from utils import interpret_difference_matrix
@@ -157,9 +157,9 @@ def detection(model_name, update_vectors=False):
     model, tokenizer = load_model(model_name, model_paths)
 
     # Load data
-    # harmful_prompts, harmless_prompts = load_ori_prompts(path_harmful, path_non_harmless)
-    _, harmless_prompts_test = load_ori_prompts(path_harmful_test, path_non_harmless_test)
-    harmful_prompts_calibration, harmless_prompts_calibration = load_ori_prompts(path_harmful_calibration, path_non_harmless_calibration)
+    # harmful_prompts, harmless_prompts = load_ori_prompts(path_harmful, path_harmless)
+    _, harmless_prompts_test = load_ori_prompts(path_harmful_test, path_harmless_test)
+    harmful_prompts_calibration, harmless_prompts_calibration = load_ori_prompts(path_harmful_calibration, path_harmless_calibration)
     jailbreaks = ["ijp", "gcg", "saa", "autodan", "pair", "drattack", "puzzler", "zulu", "base64"]
     jailbreak_prompts_calibration = get_jailbreak_prompts(model_name, jailbreaks, split="calibration")
     jailbreak_prompts_test = get_jailbreak_prompts(model_name, jailbreaks, split="test")

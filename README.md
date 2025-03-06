@@ -46,7 +46,14 @@ We selected five target LLMs and one judge LLM, as detailed in the table below:
 | vicuna-13b-v1.5                                | [[Huggingface link]](https://huggingface.co/lmsys/vicuna-13b-v1.5) |
 | ft-mistral-7b-instruct-v0.2-sorry-bench-202406 | [[Huggingface link]](https://huggingface.co/sorry-bench/ft-mistral-7b-instruct-v0.2-sorry-bench-202406) |
 
-Mistral, LLaMA-2, LLaMA-3, Vicuna-7B, and Vicuna-13B are the target models in our evaluation. Run the following shell commands to download models:
+Mistral, LLaMA-2, LLaMA-3, Vicuna-7B, and Vicuna-13B are the target models in our evaluation. We need `git-lfs` to download models. Install `git-lfs` by:
+
+```shell
+# For ubuntu
+sudo apt install git-lfs
+```
+
+Run the following shell commands to download models:
 
 ```shell
 cd models

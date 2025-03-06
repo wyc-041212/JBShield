@@ -2,7 +2,7 @@ import argparse
 import json
 from tqdm import tqdm
 
-from config import path_harmful, path_non_harmless, model_paths
+from config import path_harmful, path_harmless, model_paths
 from utils import load_model, load_ori_prompts, get_jailbreak_prompts
 from utils import get_sentence_embeddings
 from utils import interpret_difference_matrix
@@ -14,7 +14,7 @@ def interpret(model_name):
 
     # Load data
     harmful_prompts, harmless_prompts = load_ori_prompts(
-        path_harmful, path_non_harmless
+        path_harmful, path_harmless
     )
     print("Number of harmful prompts: {}".format(len(harmful_prompts)))
     print("Number of harmless prompts: {}".format(len(harmless_prompts)))
