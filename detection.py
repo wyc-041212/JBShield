@@ -412,6 +412,7 @@ def detection(model_name, update_vectors=False):
                 torch.save(thershold_safety, './vectors/{}/thershold_safety_{}.pt'.format(model_name, jailbreaks[idx_calibration]))
                 torch.save(thershold_jailbreak, './vectors/{}/thershold_jailbreak_{}.pt'.format(model_name, jailbreaks[idx_calibration]))
         # Detect the jailbreak prompts
+        print("Num of test jailbreak prompts: ", len(test_embedding[seleced_safety_layer_index]))
         results_safety = detection_judge(
             model,
             tokenizer,
@@ -429,10 +430,11 @@ def detection(model_name, update_vectors=False):
             thershold_jailbreak,
         )
         # Detect the harmless prompts
+        print("Num of test harmless prompts: ", len(test_harmless_embeddings[seleced_safety_layer_index][:len(test_embedding[seleced_safety_layer_index])]))
         results_harmless_safety = detection_judge(
             model,
             tokenizer,
-            test_harmless_embeddings[seleced_safety_layer_index],
+            test_harmless_embeddings[seleced_safety_layer_index][:len(test_embedding[seleced_safety_layer_index])],
             mean_harmless_embedding[seleced_safety_layer_index],
             calibration_safety_vector,
             thershold_safety,
@@ -440,7 +442,7 @@ def detection(model_name, update_vectors=False):
         results_harmless_jailbreak = detection_judge(
             model,
             tokenizer,
-            test_harmless_embeddings[seleced_jailbreak_layer_indexs[idx_calibration]],
+            test_harmless_embeddings[seleced_jailbreak_layer_indexs[idx_calibration]][:len(test_embedding[seleced_jailbreak_layer_indexs[idx_calibration]])],
             mean_harmful_embedding[seleced_jailbreak_layer_indexs[idx_calibration]],
             calibration_jailbreak_vectors[idx_calibration],
             thershold_jailbreak,
