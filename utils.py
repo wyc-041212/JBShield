@@ -293,15 +293,7 @@ def get_sentence_embeddings(prompts, model, model_name, tokenizer):
     return embeddings_last_token
 
 
-from nltk.corpus import words
-import nltk
-
-# Download when running for the first time
-nltk.download('words')
-word_list = set(words.words())
-
-
-def is_readable_word(word):
+def is_readable_word(word, word_list):
     return word.lower() in word_list
 
 
@@ -332,9 +324,11 @@ def interpret_vector(model, tokenizer, v, top_k=10):
     ## Filter out non-readable tokens
     # sorted_tokens = [tokenizer.decode(x).strip() for x in sorted_token_ids[:top_k]]
     sorted_tokens = []
+    from nltk.corpus import words
+    word_list = set(words.words())
     for token_id in sorted_token_ids:
         token = tokenizer.decode(token_id).strip()
-        if is_readable_word(token):
+        if is_readable_word(token, word_list):
             sorted_tokens.append(token)
             if len(sorted_tokens) == top_k:
                 break

@@ -2,6 +2,10 @@ import argparse
 import json
 from tqdm import tqdm
 
+import nltk
+# Download when running for the first time
+nltk.download('words')
+
 from config import path_harmful, path_harmless, model_paths
 from utils import load_model, load_ori_prompts, get_jailbreak_prompts
 from utils import get_sentence_embeddings

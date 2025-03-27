@@ -1,12 +1,22 @@
-# JBShield: Defending Large Language Models from Jailbreak Attacks through Activated Concept Analysis and Manipulation
+# :shield:JBShield: Defending Large Language Models from Jailbreak Attacks through Activated Concept Analysis and Manipulation
 
 This repository includes the data and python implementation for the paper "JBShield: Defending Large Language Models from Jailbreak Attacks through Activated Concept Analysis and Manipulation." (Accepted by the 34rd USENIX Security Symposium 2025).
 
 [![arXiv](https://img.shields.io/badge/arXiv-paper-b31b1b.svg)](https://arxiv.org/abs/2502.07557) [![license](https://img.shields.io/github/license/NISPlab/JBSHield)](https://opensource.org/licenses/MIT)
 
+![available](./figs/usenixbadges-available.png)![functional](./figs/usenixbadges-functional.png)![reproduced](./figs/usenixbadges-reproduced.png)
+
+This repo includes the following main components:
+
+- Test Datasets: The datasets used in our evaluation, including Jailbreak prompts from nine distinct attack types across five target LLMs, benign prompts from the [Alpaca dataset](https://github.com/tatsu-lab/stanford_alpaca/blob/main/alpaca_data.json), and harmful prompts from [AdvBench](https://github.com/llm-attacks/llm-attacks/tree/main/data/advbench) and [Hex-PHI](https://huggingface.co/datasets/LLM-Tuning-Safety/HEx-PHI) datasets. These datasets enable a comprehensive evaluation of JBShield’s detection and mitigation capabilities.
+
+- Concept Extraction Code: Based on our proposed concept analysis methodology, we provides the implementation for extracting interpretable tokens associated with toxic and jailbreak concepts. This component aligns with our promise to share tools that facilitate understanding and manipulation of high-level concepts in LLM hidden representations.
+
+- `JBShield-D` and `JBShield-M` Implementation: We provides complete testing scripts for evaluating the detection (`JBShield-D`) and mitigation (`JBShield-M`) components of `JBShield`. These scripts are tailored to assess performance across five target LLMs, ensuring reproducibility of the results reported in the paper.
+
 ![pipeline](./figs/pipeline.png)
 
-Note: The experimental results presented in this artifact may exhibit some variations due to differences in testing environments, the randomness in calibration set selection, and dataset size discrepancies across different jailbreak methods (DrAttack and Puzzler contain fewer samples compared to others). Despite these variations, the overall trends and effectiveness of `JBShield` remain stable, as demonstrated by the extensive evaluations conducted in our study.
+:star: Note: The experimental results presented in this artifact may exhibit some variations due to differences in testing environments, the randomness in calibration set selection, and dataset size discrepancies across different jailbreak methods (DrAttack and Puzzler contain fewer samples compared to others). Despite these variations, the overall trends and effectiveness of `JBShield` remain stable, as demonstrated by the extensive evaluations conducted in our study.
 
 Please feel free to contact us at [email](mailto:shenyizhang@whu.edu.cn) if you have any questions about this repo.
 
@@ -39,12 +49,12 @@ We selected five target LLMs and one judge LLM, as detailed in the table below:
 
 | Model name                                     | Link                                                         |
 | ---------------------------------------------- | ------------------------------------------------------------ |
-| Mistral-7B-Instruct-v0.2                       | [[Huggingface link]](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) |
-| Llama-2-7b-chat-hf                             | [[Huggingface link]](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) |
-| Meta-Llama-3-8B-Instruct                       | [[Huggingface link]](https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct) |
-| vicuna-7b-v1.5                                 | [[Huggingface link]](https://huggingface.co/lmsys/vicuna-7b-v1.5) |
-| vicuna-13b-v1.5                                | [[Huggingface link]](https://huggingface.co/lmsys/vicuna-13b-v1.5) |
-| ft-mistral-7b-instruct-v0.2-sorry-bench-202406 | [[Huggingface link]](https://huggingface.co/sorry-bench/ft-mistral-7b-instruct-v0.2-sorry-bench-202406) |
+| Mistral-7B-Instruct-v0.2                       | [:hugs:[Huggingface link]](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) |
+| Llama-2-7b-chat-hf                             | [:hugs:[Huggingface link]](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) |
+| Meta-Llama-3-8B-Instruct                       | [:hugs:[Huggingface link]](https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct) |
+| vicuna-7b-v1.5                                 | [:hugs:[Huggingface link]](https://huggingface.co/lmsys/vicuna-7b-v1.5) |
+| vicuna-13b-v1.5                                | [:hugs:[Huggingface link]](https://huggingface.co/lmsys/vicuna-13b-v1.5) |
+| ft-mistral-7b-instruct-v0.2-sorry-bench-202406 | [:hugs:[Huggingface link]](https://huggingface.co/sorry-bench/ft-mistral-7b-instruct-v0.2-sorry-bench-202406) |
 
 Mistral, LLaMA-2, LLaMA-3, Vicuna-7B, and Vicuna-13B are the target models in our evaluation. We need `git-lfs` to download models. Install `git-lfs` by:
 
@@ -118,7 +128,7 @@ Performance (attack success rate) of `JBShield-M` across different LLMs (see Tab
 
 If you find this helpful, please cite our work:
 
-```tex
+```bibtex
 @misc{zhang2025jbshield,
       title={JBShield: Defending Large Language Models from Jailbreak Attacks through Activated Concept Analysis and Manipulation}, 
       author={Shenyi Zhang and Yuchen Zhai and Keyan Guo and Hongxin Hu and Shengnan Guo and Zheng Fang and Lingchen Zhao and Chao Shen and Cong Wang and Qian Wang},
