@@ -3,8 +3,10 @@ Configuration file for JBShield.
 """
 
 # Data paths
-path_harmful = "data/harmful.csv"
-path_harmless = "data/harmless.csv"
+# path_harmful = "data/harmful.csv"
+# path_harmless = "data/harmless.csv"
+path_harmful = "data/harmful_subset.csv"
+path_harmless = "data/harmless_subset.csv"
 path_harmful_test = "data/harmful_test.csv"
 path_harmless_test = "data/harmless_test.csv"
 path_harmful_calibration = "data/harmful_calibration.csv"
