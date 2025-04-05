@@ -9,7 +9,8 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 # from fastchat.model import get_conversation_template
-from fastchat.conversation import get_conv_template
+# from fastchat.conversation import get_conv_template
+from fastchat.conversation import get_default_conv_template as get_conv_template
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
