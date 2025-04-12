@@ -216,7 +216,19 @@ def get_input_ids(model, model_name, tokenizer, prompt):
     """
     # Fastchat cannot corectly load the chat template for Gemma models
     # conv = get_conversation_template(model_name)
-    conv = get_conv_template(model_name)
+    # conv = get_conv_template(model_name)
+
+    # Patch model name for conv template
+    if "vicuna" in model_name:
+        template_name = "vicuna"
+    elif "llama-2" in model_name:
+        template_name = "llama-2"
+    elif "mistral" in model_name:
+        template_name = "mistral"
+    else:
+        template_name = model_name
+
+    conv = get_conv_template(template_name)
     conv.append_message(conv.roles[0], prompt)
     conv.append_message(conv.roles[1], None)
     input_ids = tokenizer([conv.get_prompt()], return_tensors="pt").to(model.device)
