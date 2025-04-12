@@ -269,11 +269,11 @@ def evaluate_mitigation():
     judge_model, judge_tokenizer = load_model("mistral-sorry-bench", model_paths)
 
     model_names = [
-        "mistral",
+        # "mistral",
         # "llama-2",
         # "llama-3",
-        # "vicuna-7b",
-        # "vicuna-13b",
+        "vicuna-7b",
+        "vicuna-13b",
     ]
     for model_name in model_names:
         # Load data

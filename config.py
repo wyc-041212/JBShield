@@ -14,10 +14,10 @@ path_harmless_calibration = "data/harmless_calibration.csv"
 
 # Model paths
 model_paths = {
-    "mistral": "./models/Mistral-7B-Instruct-v0.2",
+    # "mistral": "./models/Mistral-7B-Instruct-v0.2",
     # "llama-2": "./models/Llama-2-7b-chat-hf",
-    # "vicuna-7b": "./models/vicuna-7b-v1.5",
-    # "vicuna-13b": "./models/vicuna-13b-v1.5",
     # "llama-3": "./models/Meta-Llama-3-8B-Instruct",
+    "vicuna-7b": "./models/vicuna-7b-v1.5",
+    "vicuna-13b": "./models/vicuna-13b-v1.5",
     "mistral-sorry-bench": "./models/ft-mistral-7b-instruct-v0.2-sorry-bench-202406",
 }
