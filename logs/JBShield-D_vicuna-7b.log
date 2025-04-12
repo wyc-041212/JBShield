@@ -23,11 +23,11 @@ Accuracy: 0.9067073170731708  | F1 score: 0.9144773616545556
 Calibration data from :  saa - Test data from :  saa
 Num of test jailbreak prompts:  820
 Num of test harmless prompts:  820
-Accuracy: 0.9689024390243902  | F1 score: 0.9698403311649912
+Accuracy: 0.9823170731707317  | F1 score: 0.9826243259436789
 Calibration data from :  autodan - Test data from :  autodan
 Num of test jailbreak prompts:  820
 Num of test harmless prompts:  820
-Accuracy: 0.8957317073170732  | F1 score: 0.9055770292655991
+Accuracy: 0.8951219512195122  | F1 score: 0.9050772626931568
 Calibration data from :  pair - Test data from :  pair
 Num of test jailbreak prompts:  820
 Num of test harmless prompts:  820

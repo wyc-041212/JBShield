@@ -15,7 +15,7 @@ Evaluate the jailbreak detection...
 Calibration data from :  ijp - Test data from :  ijp
 Num of test jailbreak prompts:  820
 Num of test harmless prompts:  820
-Accuracy: 0.7737804878048781  | F1 score: 0.8153310104529616
+Accuracy: 0.7780487804878049  | F1 score: 0.8181818181818181
 Calibration data from :  gcg - Test data from :  gcg
 Num of test jailbreak prompts:  820
 Num of test harmless prompts:  820
@@ -27,7 +27,7 @@ Accuracy: 0.949390243902439  | F1 score: 0.9518282066163668
 Calibration data from :  autodan - Test data from :  autodan
 Num of test jailbreak prompts:  820
 Num of test harmless prompts:  820
-Accuracy: 0.8621951219512195  | F1 score: 0.8788853161843515
+Accuracy: 0.8646341463414634  | F1 score: 0.8807733619763695
 Calibration data from :  pair - Test data from :  pair
 Num of test jailbreak prompts:  820
 Num of test harmless prompts:  820
