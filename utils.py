@@ -220,7 +220,7 @@ def get_input_ids(model, model_name, tokenizer, prompt):
 
     # Patch model name for conv template
     if "vicuna" in model_name:
-        template_name = "vicuna"
+        template_name = "vicuna_v1.1"
     elif "llama-2" in model_name:
         template_name = "llama-2"
     elif "mistral" in model_name:
