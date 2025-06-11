@@ -22,17 +22,7 @@ def interpret(model_name):
     )
     print("Number of harmful prompts: {}".format(len(harmful_prompts)))
     print("Number of harmless prompts: {}".format(len(harmless_prompts)))
-    jailbreaks = [
-        "gcg",
-        "autodan",
-        "saa",
-        "drattack",
-        "pair",
-        "puzzler",
-        "ijp",
-        "base64",
-        "zulu",
-    ]
+    jailbreaks = ["gcg", "autodan", "saa", "drattack", "pair", "puzzler", "ijp", "base64", "zulu",]
     jailbreak_prompts = get_jailbreak_prompts(model_name, jailbreaks, split="all")
     for jailbreak in jailbreaks:
         print(f"Number of {jailbreak} prompts: {len(jailbreak_prompts[jailbreak])}")
@@ -87,100 +77,96 @@ def interpret(model_name):
                 harmless_embeddings[layer_n],
             )
             f.write("Toxic harmful-harmless " + json.dumps(interpret_tokens) + "\n")
+
+
             f.write("------------------------------------------------\n")
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_gcg[layer_n], harmless_embeddings[layer_n]
             )
             f.write("Toxic gcg-harmless " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_saa[layer_n], harmless_embeddings[layer_n]
             )
             f.write("Toxic saa-harmless " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
-                model,
-                tokenizer,
-                embeddings_autodan[layer_n],
-                harmless_embeddings[layer_n],
+                model, tokenizer, embeddings_autodan[layer_n], harmless_embeddings[layer_n],
             )
             f.write("Toxic autodan-harmless " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
-                model,
-                tokenizer,
-                embeddings_drattack[layer_n],
-                harmless_embeddings[layer_n],
+                model, tokenizer, embeddings_drattack[layer_n], harmless_embeddings[layer_n],
             )
             f.write("Toxic drattack-harmless " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_pair[layer_n], harmless_embeddings[layer_n]
             )
             f.write("Toxic pair-harmless " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
-                model,
-                tokenizer,
-                embeddings_puzzler[layer_n],
-                harmless_embeddings[layer_n],
+                model, tokenizer, embeddings_puzzler[layer_n], harmless_embeddings[layer_n],
             )
             f.write("Toxic puzzler-harmless " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_ijp[layer_n], harmless_embeddings[layer_n]
             )
             f.write("Toxic ijp-harmless " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
-                model,
-                tokenizer,
-                embeddings_base64[layer_n],
-                harmless_embeddings[layer_n],
+                model, tokenizer, embeddings_base64[layer_n], harmless_embeddings[layer_n],
             )
             f.write("Toxic base64-harmless " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_zulu[layer_n], harmless_embeddings[layer_n]
             )
             f.write("Toxic zulu-harmless " + json.dumps(interpret_tokens) + "\n")
+
+
             f.write("------------------------------------------------\n")
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_gcg[layer_n], harmful_embeddings[layer_n]
             )
             f.write("Jailbreak gcg-harmful " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_saa[layer_n], harmful_embeddings[layer_n]
             )
             f.write("Jailbreak saa-harmful " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
-                model,
-                tokenizer,
-                embeddings_autodan[layer_n],
-                harmful_embeddings[layer_n],
+                model, tokenizer, embeddings_autodan[layer_n], harmful_embeddings[layer_n],
             )
             f.write("Jailbreak autodan-harmful " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
-                model,
-                tokenizer,
-                embeddings_drattack[layer_n],
-                harmful_embeddings[layer_n],
+                model, tokenizer, embeddings_drattack[layer_n], harmful_embeddings[layer_n],
             )
             f.write("Jailbreak drattack-harmful " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_pair[layer_n], harmful_embeddings[layer_n]
             )
             f.write("Jailbreak pair-harmful " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
-                model,
-                tokenizer,
-                embeddings_puzzler[layer_n],
-                harmful_embeddings[layer_n],
+                model, tokenizer, embeddings_puzzler[layer_n], harmful_embeddings[layer_n],
             )
             f.write("Jailbreak puzzler-harmful " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_ijp[layer_n], harmful_embeddings[layer_n]
             )
             f.write("Jailbreak ijp-harmful " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
-                model,
-                tokenizer,
-                embeddings_base64[layer_n],
-                harmful_embeddings[layer_n],
+                model, tokenizer, embeddings_base64[layer_n], harmful_embeddings[layer_n],
             )
             f.write("Jailbreak base64-harmful " + json.dumps(interpret_tokens) + "\n")
+
             interpret_tokens, _, _ = interpret_difference_matrix(
                 model, tokenizer, embeddings_zulu[layer_n], harmful_embeddings[layer_n]
             )

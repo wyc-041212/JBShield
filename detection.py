@@ -12,33 +12,35 @@ from utils import interpret_difference_matrix
 from utils import cosine_similarity
 
 
-
 def find_critical_layer(embeddings1, embeddings2):
     '''
     Find the layer with the minimum average cosine similarity between the two sets of embeddings
+    (embedding 就是语言模型对一句话的“理解表示”，是一个向量)
     
     Args:
-    - embeddings1: first set of embeddings
-    - embeddings2: second set of embeddings
+    - embeddings1: first set of embeddings 有害 prompt 输入模型后的输出 每一层对 harmful prompt 的理解
+    - embeddings2: second set of embeddings 无害 prompt 输入模型后的输出 每一层对 harmless prompt 的理解
     - visualize: whether to visualize the results
 
     Returns:
     - cosine_similarities: list of average cosine similarities for each layer
     - seleced_layer_index: index of the selected layer
     '''
-    num_layers = len(embeddings1)
+    num_layers = len(embeddings1) #数总层数
     cosine_similarities = []
     seleced_layer_index = 0
     min_cosine = 1
 
-    # if the number of embeddings in two sets are not equal, truncate the longer one.
+    # if the number of embeddings in two sets are not equal, truncate(截短) the longer one.
+    # 防止两个 embedding 列表长度不一致（比如一句话多一句话少）
+    # 截断长的那个，保持对齐，避免后面 zip 报错
     if len(embeddings1[0]) != len(embeddings2[0]):
         min_len = min(len(embeddings1[0]), len(embeddings2[0]))
         embeddings1 = [emb[:min_len] for emb in embeddings1]
         embeddings2 = [emb[:min_len] for emb in embeddings2]
 
-    for layer_index in range(num_layers):
-        layer_embeddings1 = torch.stack(embeddings1[layer_index])
+    for layer_index in range(num_layers): #遍历所有layer，得到每个layer的正负embedding
+        layer_embeddings1 = torch.stack(embeddings1[layer_index]) #torch.stack：把一个张量列表变成一个新的更高维的张量
         layer_embeddings2 = torch.stack(embeddings2[layer_index])
         
         layer_cosine = []
@@ -56,12 +58,13 @@ def find_critical_layer(embeddings1, embeddings2):
             min_cosine = avg_cosine
             seleced_layer_index = layer_index
 
-    return cosine_similarities, seleced_layer_index
+    return cosine_similarities, seleced_layer_index #？为什么要返回所有余弦相似
 
 
 def get_thershold(scores1, scores2):
     '''
     Get the optimal threshold for the given scores
+    (给两组得分（通常来自 harmful 和 harmless prompt 的“越狱危险分数”），算出一个 最佳的阈值，用于分类)
 
     Args:
     - scores1: first set of scores (eg [0.2, 0.3, 0.4, 0.2, 0.5])
@@ -70,26 +73,28 @@ def get_thershold(scores1, scores2):
     Returns:
     - optimal_threshold: optimal threshold to distinguish the two sets of scores (eg 0.6)
     '''
-    scores1 = np.array(scores1)
+    scores1 = np.array(scores1)  # 把输入列表转成 numpy 数组，方便后续拼接和计算
     scores2 = np.array(scores2)
 
-    scores = np.concatenate((scores1, scores2))
-    labels = np.array([0] * len(scores1) + [1] * len(scores2))
+    scores = np.concatenate((scores1, scores2))  # 得分
+    labels = np.array([0] * len(scores1) + [1] * len(scores2))  # 标签
     # Calculate ROC curve
     fpr, tpr, thresholds = roc_curve(labels, scores)
 
     # Find the optimal threshold
     optimal_idx = np.argmax(tpr - fpr)
-    optimal_threshold = thresholds[optimal_idx]
+    optimal_threshold = thresholds[optimal_idx]  # 最佳阈值
 
     # If the optimal threshold is not finite, set it to the average of the min and max scores
     if not np.isfinite(optimal_threshold):
-        optimal_threshold = (np.min(scores1) + np.max(scores2)) / 2
+        optimal_threshold = (np.min(scores1) + np.max(scores2)) / 2  # 为什么分界线应该在 harmless 的最小值 和 harmful 的最大值 之间
 
     return optimal_threshold
 
 
-def find_optimal_threshold(model, tokenizer, calibration_embeddings1, calibration_embeddings2, base_calibration_embedding, calibration_vector):
+def find_optimal_threshold(
+        model, tokenizer, calibration_embeddings1, calibration_embeddings2, base_calibration_embedding, calibration_vector
+):
     '''
     Find the optimal threshold to distinguish the two sets of embeddings
 
@@ -158,8 +163,8 @@ def detection(model_name, update_vectors=False):
 
     # Load data
     # harmful_prompts, harmless_prompts = load_ori_prompts(path_harmful, path_harmless)
-    _, harmless_prompts_test = load_ori_prompts(path_harmful_test, path_harmless_test)
-    harmful_prompts_calibration, harmless_prompts_calibration = load_ori_prompts(path_harmful_calibration, path_harmless_calibration)
+    _, harmless_prompts_test = load_ori_prompts(path_harmful_test, path_harmless_test)  # 从测试集加载 无害 test 数据
+    harmful_prompts_calibration, harmless_prompts_calibration = load_ori_prompts(path_harmful_calibration, path_harmless_calibration)  # 从校准集加载 有害和无害的 calibration 数据
     jailbreaks = ["ijp", "gcg", "saa", "autodan", "pair", "drattack", "puzzler", "zulu", "base64"]
     jailbreak_prompts_calibration = get_jailbreak_prompts(model_name, jailbreaks, split="calibration")
     jailbreak_prompts_test = get_jailbreak_prompts(model_name, jailbreaks, split="test")
@@ -203,6 +208,7 @@ def detection(model_name, update_vectors=False):
 
     # Embeddings for test prompts
     print("Get embeddings for test prompts...")
+    # 提前算好 test 集里的 harmless prompts 的 embedding，后面用它来跑判别器，看会不会误报（false positive）
     test_harmless_embeddings = get_sentence_embeddings(harmless_prompts_test, model, model_name, tokenizer)
     # test_harmful_embeddings = get_sentence_embeddings(harmful_prompts_test, model, model_name, tokenizer)
 
@@ -220,6 +226,8 @@ def detection(model_name, update_vectors=False):
     # Find the critical layers
     _, seleced_safety_layer_index = find_critical_layer(calibration_harmful_embeddings, calibration_harmless_embeddings)
     print("Selected layer index for toxic concept detection: {}".format(seleced_safety_layer_index))
+
+    # 从向量空间中寻找能够识别越狱的那一层
     _, seleced_jailbreak_layer_index_gcg = find_critical_layer(calibration_gcg_embeddings, calibration_harmful_embeddings)
     _, seleced_jailbreak_layer_index_puzzler = find_critical_layer(calibration_puzzler_embeddings, calibration_harmful_embeddings)
     _, seleced_jailbreak_layer_index_saa = find_critical_layer(calibration_saa_embeddings, calibration_harmful_embeddings)
@@ -250,6 +258,7 @@ def detection(model_name, update_vectors=False):
         return_tokens=False,
     )
 
+    # jailbreak_embedding - harmful_embedding 然后 乘 -1，得到的方向是：“harmful → 被攻击后的样子”
     calibration_jailbreak_vector_gcg, delta_jailbreak_gcg = interpret_difference_matrix(
         model,
         tokenizer,
@@ -390,6 +399,7 @@ def detection(model_name, update_vectors=False):
         labels_jb = []
         labels_harmless = []
         # Find the optimal threshold for the jailbreak detection
+        # safety 检测器：判断 test 是否 toxic（基于 harmful vs harmless 方向）
         thershold_safety = find_optimal_threshold(
             model,
             tokenizer,
@@ -398,6 +408,7 @@ def detection(model_name, update_vectors=False):
             mean_harmless_embedding[seleced_safety_layer_index],
             calibration_safety_vector,
         )
+        # jailbreak 检测器：判断 test 是否越狱（基于 jailbreak vs harmful 方向）
         thershold_jailbreak = find_optimal_threshold(
             model,
             tokenizer,
@@ -411,7 +422,7 @@ def detection(model_name, update_vectors=False):
             if idx_calibration == idx_test:
                 torch.save(thershold_safety, './vectors/{}/thershold_safety_{}.pt'.format(model_name, jailbreaks[idx_calibration]))
                 torch.save(thershold_jailbreak, './vectors/{}/thershold_jailbreak_{}.pt'.format(model_name, jailbreaks[idx_calibration]))
-        # Detect the jailbreak prompts
+        # Detect the jailbreak prompts 把 test prompt 的 embedding 拿来和之前学出的语义方向比较，判断它有没有 toxic 倾向 or jailbreak 倾向
         print("Num of test jailbreak prompts: ", len(test_embedding[seleced_safety_layer_index]))
         results_safety = detection_judge(
             model,
@@ -444,7 +455,11 @@ def detection(model_name, update_vectors=False):
             tokenizer,
             test_harmless_embeddings[seleced_jailbreak_layer_indexs[idx_calibration]][:len(test_embedding[seleced_jailbreak_layer_indexs[idx_calibration]])],
             mean_harmful_embedding[seleced_jailbreak_layer_indexs[idx_calibration]],
+
+            # calibration_jailbreak_vectors 是一个 list，每个是对应一个攻击类型的 base vector，而这段代码是 按攻击类型枚举 index，然后分别跑一遍
+            # 不管你是哪种攻击，我把你和每一种攻击方向都对一遍，看看你往哪一边偏，如果有一项相似度超过 threshold，就判为 jailbreak
             calibration_jailbreak_vectors[idx_calibration],
+
             thershold_jailbreak,
         )
         # If result_safety and result_jailbreak are all 1.0, this prompt is judged as jailbreak

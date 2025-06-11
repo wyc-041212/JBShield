@@ -73,20 +73,24 @@ class JBShieldM:
                 results.append(0.0)
         return results
 
-    def hook_fn_safety(self, module, input, output):
+    def hook_fn_safety(self, module, input, output):  # 在前向传播时注入干预向量
         """
         Hook function to add a vector to the output of the model.
         """
+        """
+        output 是一个 tuple → output[0] 是主要的输出张量 → tmp = output[0] 表示提取出这个张量
+        """
         tmp = output[0]
         toxic_concept_detection = self.detection(
-            tmp,
+            tmp,  # embeddings1
             self.mean_harmless_embedding[self.selected_safety_layer_index - 1],
             self.base_safety_vector,
             self.threshold_safety,
         )
         # # Manipulating only the first few tokens can improve readability
+        # 只对前几个 token 的 embedding 做干预，而不是整句话，会让模型输出更自然、可读性更好
         # if toxic_concept_detection and self.count >= 0:
-        if toxic_concept_detection:
+        if toxic_concept_detection:  # any() ？
             tmp = tmp + self.delta_safety * self.base_safety_vector.to(
                 torch.float16
             ).to(tmp.device)
@@ -113,6 +117,7 @@ class JBShieldM:
         new_output = (tmp, *output[1:])
         return new_output
 
+    # 将两个 forward hook 注册到模型的指定 transformer 层，使得模型在前向传播这些层时，会调用你自己写的干预函数（hook_fn_safety, hook_fn_jailbreak）
     def register_hooks(self):
         hook_safety = self.model.model.layers[
             self.selected_safety_layer_index - 1
@@ -123,6 +128,7 @@ class JBShieldM:
         ].register_forward_hook(self.hook_fn_jailbreak)
         self.hooks.append(hook_jailbreak)
 
+    # 模型在测试多个攻击时，需要更换 base vector 或 delta 值（各种 jailbreak type 训练出的 base vector 和 delta）
     def remove_hooks(self):
         for hook in self.hooks:
             hook.remove()
@@ -135,18 +141,8 @@ def prepare_mitigation_data(model_name):
     # Load model
     model, tokenizer = load_model(model_name, model_paths)
 
-    # Load data
-    jailbreaks = [
-        "gcg",
-        "puzzler",
-        "saa",
-        "autodan",
-        "drattack",
-        "pair",
-        "ijp",
-        "base64",
-        "zulu",
-    ]
+    # Load data 加载原始 jailbreak prompt 数据
+    jailbreaks = ["gcg", "puzzler", "saa", "autodan", "drattack", "pair", "ijp", "base64", "zulu",]
     jailbreak_prompts = {}
     goals = {}
     for jailbreak in jailbreaks:
@@ -156,6 +152,7 @@ def prepare_mitigation_data(model_name):
         jailbreak_prompts[jailbreak] = [item["jailbreak"] for item in data]
         goals[jailbreak] = [item["goal"] for item in data]
 
+    # 加载通用向量（所有攻击共享）
     mean_harmless_embedding = torch.load(
         f"./vectors/{model_name}/mean_harmless_embedding.pt"
     )
@@ -165,6 +162,8 @@ def prepare_mitigation_data(model_name):
     base_safety_vector = torch.load(
         f"./vectors/{model_name}/calibration_safety_vector.pt"
     )
+
+    # 加载每种攻击的“干预层索引”（critical layers）
     [
         selected_safety_layer_index,
         selected_jailbreak_layer_index_gcg,
@@ -228,7 +227,7 @@ def prepare_mitigation_data(model_name):
             selected_safety_layer_index,
             selected_jailbreak_layer_index,
         )
-        jbshield_m.register_hooks()
+        jbshield_m.register_hooks()  # 注册 hook
 
         # Generate outputs
         outputs = []
@@ -243,7 +242,7 @@ def prepare_mitigation_data(model_name):
                 )
             )
             gc.collect()
-            torch.cuda.empty_cache()
+            torch.cuda.empty_cache()  # 强制清空缓存释放显存
             print(outputs[-1])
 
         # Save jailbreaks and outputs in json files
@@ -260,34 +259,27 @@ def prepare_mitigation_data(model_name):
                 f,
             )
         
-        jbshield_m.remove_hooks()
+        jbshield_m.remove_hooks()  # 避免当前攻击类型的 hook 干扰下一个攻击的处理
 
 
 def evaluate_mitigation():
-    # Load judge model
+    # Load judge model 加载一个“打分用”的评估模型 mistral-sorry-bench
     print("Loading judge model...")
     judge_model, judge_tokenizer = load_model("mistral-sorry-bench", model_paths)
 
     model_names = [
-        # "mistral",
-        # "llama-2",
-        # "llama-3",
+        "mistral",
+        "llama-2",
+        "llama-3",
         "vicuna-7b",
         "vicuna-13b",
+
+        "deepseek-r1",
+        "qwen-2.5"
     ]
     for model_name in model_names:
         # Load data
-        jailbreaks = [
-            "ijp",
-            "gcg",
-            "saa",
-            "autodan",
-            "pair",
-            "drattack",
-            "puzzler",
-            "zulu",
-            "base64",
-        ]
+        jailbreaks = ["ijp", "gcg", "saa", "autodan", "pair", "drattack", "puzzler", "zulu", "base64",]
         jailbreak_prompts = {}
         responses = {}
         for jailbreak in jailbreaks:
@@ -313,9 +305,10 @@ def evaluate_mitigation():
 
 
 if __name__ == "__main__":
-    # # Prepare responses for test
+    # Prepare responses for test
     # for model_name in ["mistral", "llama-2", "llama-3", "vicuna-7b", "vicuna-13b"]:
-    #     prepare_mitigation_data(model_name)
+    for model_name in ["deepseek-r1", "qwen-2.5"]:
+        prepare_mitigation_data(model_name)
     
     # Run this script to evaluate the mitigation performance of JBShield-M on 5 llms
     evaluate_mitigation()
