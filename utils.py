@@ -243,6 +243,11 @@ def get_input_ids(model, model_name, tokenizer, prompt):  # 把prompt（input）
         template_name = "llama-2"
     elif "mistral" in model_name:
         template_name = "mistral"
+
+    elif "deepseek" in model_name:
+        template_name = "deepseek"
+    elif "qwen" in model_name:
+        template_name = "qwen"
     else:
         template_name = model_name
 
