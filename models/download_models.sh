@@ -11,4 +11,3 @@ git clone https://huggingface.co/sorry-bench/ft-mistral-7b-instruct-v0.2-sorry-b
 git clone https://huggingface.co/deepseek-ai/DeepSeek-R1
 git clone https://huggingface.co/Qwen/Qwen2.5-7B-Instruct
 
-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
