@@ -20,5 +20,5 @@ model_paths = {
     "mistral-sorry-bench": "./models/ft-mistral-7b-instruct-v0.2-sorry-bench-202406",
 
     "deepseek-r1": "./models/DeepSeek-R1",
-    "qwen-2.5": "./models/Qwen2.5-VL-7B-Instruct"
+    "qwen-2.5": "./models/Qwen2.5-7B-Instruct"
 }
