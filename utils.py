@@ -75,13 +75,14 @@ def load_model(model_name, model_paths):
         torch_dtype=torch.float16,  # 用半精度节省显存
         # low_cpu_mem_usage=True,
         trust_remote_code=True,  # 允许加载自定义模型（如 Hugging Face 上的改造模型）
+        local_files_only=True,
         device_map="auto",  # 自动将模型部署到显卡（GPU）或 CPU 上
     ).eval()
 
     # Tokenizer 是模型的“输入翻译器”：它把你写的中文/英文句子，变成一个个数字编号（token ID），这些编号才是模型能处理的
     # 模型内部有个“词表”，每个词或子词都有个编号，tokenizer 就是用来查编号的
     tokenizer = AutoTokenizer.from_pretrained(
-        model_path, trust_remote_code=True, use_fast=False
+        model_path, trust_remote_code=True, use_fast=False, local_files_only=True,
     )
 
     if tokenizer.pad_token is None:
