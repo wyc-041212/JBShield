@@ -9,4 +9,6 @@ git clone https://huggingface.co/lmsys/vicuna-13b-v1.5
 git clone https://huggingface.co/sorry-bench/ft-mistral-7b-instruct-v0.2-sorry-bench-202406
 
 git clone https://huggingface.co/deepseek-ai/DeepSeek-R1
-git clone https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct
+git clone https://huggingface.co/Qwen/Qwen2.5-7B-Instruct
+
+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
