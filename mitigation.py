@@ -315,8 +315,7 @@ if __name__ == "__main__":
     # Prepare responses for test
     # for model_name in ["mistral", "llama-2", "llama-3", "vicuna-7b", "vicuna-13b"]:
     # for model_name in ["deepseek-r1", "qwen-2.5"]:
-    for model_name in ["llama-3"]:
-        prepare_mitigation_data(model_name)
+    #   prepare_mitigation_data(model_name)
     
     # Run this script to evaluate the mitigation performance of JBShield-M on 5 llms
     evaluate_mitigation()
