@@ -17,21 +17,3 @@ Evaluating mitigation for zulu on vicuna-7b
 Attack success rate: 0.0%
 Evaluating mitigation for base64 on vicuna-7b
 Attack success rate: 0.0%
-Evaluating mitigation for ijp on vicuna-13b
-Attack success rate: 0.0%
-Evaluating mitigation for gcg on vicuna-13b
-Attack success rate: 0.0%
-Evaluating mitigation for saa on vicuna-13b
-Attack success rate: 0.0%
-Evaluating mitigation for autodan on vicuna-13b
-Attack success rate: 0.0%
-Evaluating mitigation for pair on vicuna-13b
-Attack success rate: 0.0%
-Evaluating mitigation for drattack on vicuna-13b
-Attack success rate: 0.0%
-Evaluating mitigation for puzzler on vicuna-13b
-Attack success rate: 0.0%
-Evaluating mitigation for zulu on vicuna-13b
-Attack success rate: 0.0%
-Evaluating mitigation for base64 on vicuna-13b
-Attack success rate: 0.0%
