@@ -198,17 +198,24 @@ def prepare_mitigation_data(model_name):
         print("Prepara response for {}".format(jailbreak))
         # load vectors and thresholds
         base_jailbreak_vector = torch.load(
-            f"./vectors/{model_name}/calibration_jailbreak_vector_{jailbreak}.pt"
+            f"./vectors/{model_name}/calibration_jailbreak_vector_{jailbreak}.pt",
+            weights_only=False
         )
         threshold_safety = torch.load(
-            f"./vectors/{model_name}/thershold_safety_{jailbreak}.pt"
+            f"./vectors/{model_name}/thershold_safety_{jailbreak}.pt",
+            weights_only=False
         )
         threshold_jailbreak = torch.load(
-            f"./vectors/{model_name}/thershold_jailbreak_{jailbreak}.pt"
+            f"./vectors/{model_name}/thershold_jailbreak_{jailbreak}.pt",
+            weights_only=False
         )
-        delta_safety = torch.load(f"./vectors/{model_name}/delta_safety.pt")
+        delta_safety = torch.load(
+            f"./vectors/{model_name}/delta_safety.pt",
+            weights_only=False
+        )
         delta_jailbreak = torch.load(
-            f"./vectors/{model_name}/delta_jailbreak_{jailbreak}.pt"
+            f"./vectors/{model_name}/delta_jailbreak_{jailbreak}.pt",
+            weights_only=False
         )
         selected_jailbreak_layer_index = selected_jailbreak_layer_indexs[i]
 
